@@ -39,15 +39,13 @@ public final class ApiServer {
             b.group(bossGroup, workerGroup).channel(NioServerSocketChannel.class)
                     .handler(new LoggingHandler(LogLevel.INFO)).childHandler(new ApiServerInitializer(null));
 
-            Channel ch = b.bind(8080).sync().channel();
+            Channel ch = b.bind(address).sync().channel();
 
             channelFuture = ch.closeFuture();
             channelFuture.sync();
-        }
-        catch (InterruptedException e) {
+        } catch (InterruptedException e) {
             e.printStackTrace();
-        }
-        finally {
+        } finally {
             bossGroup.shutdownGracefully();
             workerGroup.shutdownGracefully();
         }
